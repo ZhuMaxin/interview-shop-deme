@@ -1,3 +1,8 @@
+node_modules/  # 忽略所有依赖目录 
+dist/          # 生产环境构建输出 
+build/         # 编译生成文件 
+coverage/      # 测试覆盖率报告 
+.ssr-dist/     # SSR构建产物 (若使用)
 # Logs
 logs
 *.log

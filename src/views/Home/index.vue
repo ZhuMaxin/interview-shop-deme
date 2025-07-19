@@ -1,10 +1,12 @@
 <script setup>
-
+import CarouselImage from "./components/CarouselImage.vue";
+import ProductList from "./components/ProductList.vue";
 </script>
 
 
 <template>
-  home
+  <CarouselImage/>
+  <ProductList/>
 </template>
 
 <style lang="scss" scoped>

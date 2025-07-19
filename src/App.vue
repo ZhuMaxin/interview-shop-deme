@@ -1,6 +1,14 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
+
+import {getCategoryAPI} from '@/apis/testAPI';
+
+getCategoryAPI().then(res => {
+  console.log(res);
+}).catch(err => {
+  console.log(err);
+});
 </script>
 
 <template>

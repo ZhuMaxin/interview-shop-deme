@@ -15,7 +15,7 @@ const commodityStore = useCommodityStore();
           <RouterLink to="/">首页</RouterLink>
         </li>
         <li v-for="item in commodityStore.dataCategoryList" :key="item.id">
-          <RouterLink to="/category">{{ item.category_name }}</RouterLink>
+          <RouterLink :to="`/category/${item.id}`">{{ item.category_name }}</RouterLink>
         </li>
       </ul>
 

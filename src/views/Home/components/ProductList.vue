@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { productList,productSearch } from "@/apis/commodity";
+import { productList, productSearch } from "@/apis/commodity";
 import { useCommodityStore } from "@/stores/commodity";
 const commodityStore = useCommodityStore();
 
@@ -14,32 +14,48 @@ const pagination = ref({
   page_size: 10,
 });
 
+const loadProductList = ref(false);
 function getProductList() {
-  productList(pagination.value).then((res) => {
-    let _data = res?.data?.data?.item ?? [];
-    if (!Array.isArray(_data)) _data = [];
-    dataProductList.value = _data;
-    total.value = res?.data?.data?.total ?? 0;
-  });
+  loadProductList.value = true;
+  productList(pagination.value)
+    .then((res) => {
+      let _data = res?.data?.data?.item ?? [];
+      if (!Array.isArray(_data)) _data = [];
+      dataProductList.value = _data;
+      total.value = res?.data?.data?.total ?? 0;
+    })
+    .finally(() => {
+      loadProductList.value = false;
+    });
 }
-getProductList()
+getProductList();
 
+const loadProductSearch = ref(false);
 function getProductSearch(newValue) {
-  productSearch({...pagination.value,info:newValue}).then((res) => {
-    let _data = res?.data?.data?.item ?? [];
-    if (!Array.isArray(_data)) _data = [];
-    dataProductList.value = _data;
-    total.value = res?.data?.data?.total ?? 0;
-  });
+  loadProductSearch.value = true;
+  productSearch({ ...pagination.value, info: newValue })
+    .then((res) => {
+      let _data = res?.data?.data?.item ?? [];
+      if (!Array.isArray(_data)) _data = [];
+      dataProductList.value = _data;
+      total.value = res?.data?.data?.total ?? 0;
+    })
+    .finally(() => {
+      loadProductSearch.value = false;
+    });
 }
-watch(()=>commodityStore.searchValue, (newValue) => { 
-  getProductSearch(newValue)
-})
+watch(
+  () => commodityStore.searchValue,
+  (newValue) => {
+    getProductSearch(newValue);
+  }
+);
+
 </script>
 
 <template>
   <div class="product-list">
-    <div class="container">
+    <div v-loading="loadProductList || loadProductSearch" class="container">
       <div class="list-box">
         <div v-for="item in dataProductList" :key="item.id" class="list-item">
           <div class="item-img">
@@ -64,6 +80,7 @@ watch(()=>commodityStore.searchValue, (newValue) => {
           </div>
         </div>
       </div>
+      <el-empty v-if="dataProductList.length === 0" description="暂无数据" />
       <div class="page-box">
         <el-pagination
           v-model:current-page="pagination.page_num"

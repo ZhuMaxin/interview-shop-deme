@@ -43,6 +43,7 @@ axiosHttp.interceptors.response.use(
     }
   },
   function (error) {
+    const userStore = useUserStore();
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
     if (error.status) {
@@ -51,6 +52,7 @@ axiosHttp.interceptors.response.use(
       switch (status) {
         case 401:
           ElMessage.error(message);
+          userStore.clearUserData()
           router.push("/login"); // 跳转登录页
           break;
         case 404:

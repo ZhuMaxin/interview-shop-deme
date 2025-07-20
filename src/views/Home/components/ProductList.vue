@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useRoute } from "vue-router";
-import { productList } from "@/apis/commodity";
+import { productList,productSearch } from "@/apis/commodity";
 import { useCommodityStore } from "@/stores/commodity";
 const commodityStore = useCommodityStore();
 
@@ -24,8 +24,16 @@ function getProductList() {
 }
 getProductList()
 
+function getProductSearch(newValue) {
+  productSearch({...pagination.value,info:newValue}).then((res) => {
+    let _data = res?.data?.data?.item ?? [];
+    if (!Array.isArray(_data)) _data = [];
+    dataProductList.value = _data;
+    total.value = res?.data?.data?.total ?? 0;
+  });
+}
 watch(()=>commodityStore.searchValue, (newValue) => { 
-  
+  getProductSearch(newValue)
 })
 </script>
 

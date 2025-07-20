@@ -15,6 +15,16 @@ const router = createRouter({
           path: 'category',
           component: () => import("@/views/Category/index.vue"),
         },
+        {
+          path: 'member',
+          component: () => import("@/views/Member/index.vue"),
+          children: [
+            {
+              path: '',
+              component: () => import("@/views/Member/components/user.vue"),
+            },
+          ]
+        },
       ],
     },
     {

@@ -15,5 +15,5 @@ commodityStore.getCategoryList()
   <LayoutNav />
   <LayoutHeader />
   <RouterView />
-  <LayoutFooter />
+  <!-- <LayoutFooter /> -->
 </template>

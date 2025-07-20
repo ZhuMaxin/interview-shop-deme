@@ -8,3 +8,12 @@ export function userLogin(data) {
     data
   });
 }
+
+// 用户注册
+export function userRegister(data) {
+  return axiosHttp({
+    url: "/user/register",
+    method: "POST",
+    data
+  });
+}

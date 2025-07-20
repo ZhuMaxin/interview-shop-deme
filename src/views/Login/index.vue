@@ -3,18 +3,26 @@ import { ref, useTemplateRef } from "vue";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { userRegister } from "@/apis/user";
 const userStore = useUserStore();
 const router = useRouter();
 const formLogin = ref({
+  nick_name: "",
   user_name: "",
   password: "",
+  key: "",
   agree: true,
 });
 const rulesLogin = {
+  nick_name: [{ required: true, message: "请输入昵称", trigger: "blur" }],
   user_name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
   password: [
     { required: true, message: "请输入密码", trigger: "blur" },
     { min: 6, max: 14, message: "长度必须在 6 到 14 之间", trigger: "blur" },
+  ],
+  key: [
+    { required: true, message: "请输入支付密码", trigger: "blur" },
+    { min: 6, max: 6, message: "长度必须是 6 位数", trigger: "blur" },
   ],
   agree: [
     {
@@ -30,24 +38,54 @@ const rulesLogin = {
   ],
 };
 
+const loadLogin = ref(false);
 function proceedLogin() {
-  userStore.getUser(formLogin.value).then((res) => { 
+  loadLogin.value = true;
+  userStore.getUser(formLogin.value).then((res) => {
     ElMessage({
       message: "登录成功",
       type: "success",
     });
     router.replace("/");
+  }).finally(() => {
+    loadLogin.value = false;
+  });
+}
+
+const loadRegister = ref(false);
+function subRegister() {
+  loadRegister.value = true;
+  userRegister(formLogin.value).then((res) => { 
+    ElMessage({
+      message: res.data.data,
+      type: "success",
+    });
+    isLogin.value = true
+    refLogin.value.resetFields()
+  }).finally(() => {
+    loadRegister.value = false;
   });
 }
 const refLogin = useTemplateRef("refLogin");
 async function btnLogin() {
   await refLogin.value.validate((valid, fields) => {
     if (valid) {
-      proceedLogin();
+      if (isLogin.value) {
+        proceedLogin();
+      }else {
+        subRegister()
+      }
+      
     } else {
       // console.log("error submit!", fields);
     }
   });
+}
+
+const isLogin = ref(true);
+function changeRegisterORlogin() {
+  isLogin.value = !isLogin.value;
+  refLogin.value.resetFields()
 }
 </script>
 
@@ -65,8 +103,8 @@ async function btnLogin() {
         </RouterLink>
       </div>
     </header>
-    <section class="login-section">
-      <div class="wrapper">
+    <section v-loading.fullscreen="loadLogin" class="login-section">
+      <div v-loading="loadRegister" class="wrapper">
         <nav>
           <a href="javascript:;">账户登录</a>
         </nav>
@@ -75,23 +113,43 @@ async function btnLogin() {
             <el-form
               :model="formLogin"
               label-position="right"
-              label-width="60px"
+              label-width="auto"
               status-icon
               :rules="rulesLogin"
               ref="refLogin"
             >
+              <el-form-item v-if="!isLogin" label="昵称" prop="nick_name">
+                <el-input v-model="formLogin.nick_name" clearable placeholder="请输入昵称" />
+              </el-form-item>
               <el-form-item label="账户" prop="user_name">
-                <el-input v-model="formLogin.user_name" clearable placeholder="账户" />
+                <el-input v-model="formLogin.user_name" clearable placeholder="请输入账户" />
               </el-form-item>
               <el-form-item label="密码" prop="password">
-                <el-input v-model="formLogin.password" clearable show-password placeholder="密码" />
+                <el-input v-model="formLogin.password" clearable show-password placeholder="请输入密码" />
               </el-form-item>
-              <el-form-item prop="agree" label-width="22px">
+              <el-form-item v-if="!isLogin" label="支付密码" prop="key">
+                <el-input v-model="formLogin.key" clearable show-password placeholder="请输入支付密码" />
+              </el-form-item>
+              <!-- <el-form-item prop="agree" label-width="22px">
                 <el-checkbox v-model="formLogin.agree" size="large">
                   我已同意隐私条款和服务条款
                 </el-checkbox>
-              </el-form-item>
-              <el-button size="large" class="subBtn" @click="btnLogin">点击登录</el-button>
+              </el-form-item> -->
+              <el-button size="large" class="subBtn" @click="btnLogin">点击{{ isLogin?'登录':'注册' }}</el-button>
+              <div class="register-login">
+                <template v-if="isLogin">
+                  还没有账户？
+                  <el-button type="primary" text @click="changeRegisterORlogin">
+                    立即注册
+                  </el-button>
+                </template>
+                <template v-else>
+                  已有账户？
+                  <el-button type="primary" text @click="changeRegisterORlogin">
+                    去登陆
+                  </el-button>
+                </template>
+              </div>
             </el-form>
           </div>
         </div>
@@ -104,12 +162,12 @@ async function btnLogin() {
           <a href="javascript:;">关于我们</a>
           <a href="javascript:;">帮助中心</a>
           <a href="javascript:;">售后服务</a>
-          <a href="javascript:;">配送与验收</a>
+          <!-- <a href="javascript:;">配送与验收</a>
           <a href="javascript:;">商务合作</a>
-          <a href="javascript:;">搜索推荐</a>
+          <a href="javascript:;">搜索推荐</a> -->
           <a href="javascript:;">友情链接</a>
         </p>
-        <p>CopyRight &copy; 小兔鲜儿</p>
+        <p>CopyRight &copy; xxl</p>
       </div>
     </footer>
   </div>
@@ -340,5 +398,12 @@ async function btnLogin() {
   background: $xtxColor;
   width: 100%;
   color: #fff;
+}
+
+.register-login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 14px 14px 0;
 }
 </style>

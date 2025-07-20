@@ -33,12 +33,11 @@ axiosHttp.interceptors.response.use(
   function (response) {
     // 2xx 范围内的状态码都会触发该函数。
     // 对响应数据做点什么
-    const res = response.data;
-    if (res.status === 200) {
+    if (response.data.status === 200) {
       return response; // 业务成功，返回核心数据
     } else {
       // 主动抛出业务错误，触发 catch 分支
-      ElMessage.error(res.message);
+      ElMessage.error(response.data.error);
       return Promise.reject(response);
     }
   },

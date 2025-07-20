@@ -15,3 +15,21 @@ export function carousels() {
     method: "GET",
   });
 }
+
+// 获取商品列表
+export function productList(params) {
+  return axiosHttp({
+    url: "/product/list",
+    method: "GET",
+    params
+  });
+}
+
+// 搜索商品
+export function productSearch(data) {
+  return axiosHttp({
+    url: "/product/search",
+    method: "POST",
+    data
+  });
+}

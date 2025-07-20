@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { categoryList } from "@/apis/commodity";
 
 export const useCommodityStore = defineStore("commodity", () => {
+  // 分类信息
   const dataCategoryList = ref([]);
   function getCategoryList() {
     categoryList().then((res) => {
@@ -12,8 +13,16 @@ export const useCommodityStore = defineStore("commodity", () => {
     });
   }
 
+  // 产品列表搜索框 value
+  const searchValue = ref("");
+  function setSearchValue(value) {
+    searchValue.value = value;
+  }
+
   return {
     dataCategoryList,
     getCategoryList,
+    searchValue,
+    setSearchValue,
   };
 });

@@ -1,7 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { useCommodityStore } from "@/stores/commodity";
+import {  Search } from '@element-plus/icons-vue'
 const commodityStore = useCommodityStore();
+
+const productSearch = ref('');
 </script>
 
 <template>
@@ -19,8 +22,14 @@ const commodityStore = useCommodityStore();
         </li>
       </ul>
       <div class="search">
-        <i class="iconfont icon-search"></i>
-        <input type="text" placeholder="搜一搜" />
+        <el-input
+          v-model="productSearch"
+          clearable
+          style="width: 170px"
+          placeholder="搜一搜"
+          :prefix-icon="Search"
+          @change="commodityStore.setSearchValue(productSearch)"
+        />
       </div>
       <!-- 头部购物车 -->
     </div>

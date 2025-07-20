@@ -3,6 +3,11 @@ import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user";
 const userStore = useUserStore();
 const router = useRouter();
+
+function logout() {
+  userStore.clearUserData()
+  router.push("/login");
+}
 </script>
 
 <template>
@@ -16,7 +21,7 @@ const router = useRouter();
             >
           </li>
           <li>
-            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+            <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消" @confirm="logout">
               <template #reference>
                 <a href="javascript:;">退出登录</a>
               </template>

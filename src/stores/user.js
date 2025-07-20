@@ -21,11 +21,19 @@ export const useUserStore = defineStore(
       });
     }
 
+    // 清空用户数据
+    function clearUserData() {
+      dataUser.value = {};
+      access_token.value = "";
+      refresh_token.value = "";
+    }
+
     return {
       dataUser,
       getUser,
       access_token,
       refresh_token,
+      clearUserData,
     };
   },
   { persist: true }

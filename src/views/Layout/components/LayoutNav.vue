@@ -1,13 +1,20 @@
 <script setup>
-
+import { useRouter, useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
+const router = useRouter();
 </script>
 
 <template>
   <nav class="app-topnav">
     <div class="container">
       <ul>
-        <template v-if="true">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>周杰伦</a></li>
+        <template v-if="userStore.access_token">
+          <li>
+            <a href="javascript:;"
+              ><i class="iconfont icon-user"></i>{{ userStore.dataUser.user_name }}</a
+            >
+          </li>
           <li>
             <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
               <template #reference>
@@ -19,7 +26,7 @@
           <li><a href="javascript:;">会员中心</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:;">请先登录</a></li>
+          <li><a href="javascript:;" @click="router.push('/login')">请先登录</a></li>
           <li><a href="javascript:;">帮助中心</a></li>
           <li><a href="javascript:;">关于我们</a></li>
         </template>
@@ -27,7 +34,6 @@
     </div>
   </nav>
 </template>
-
 
 <style scoped lang="scss">
 .app-topnav {
@@ -54,7 +60,7 @@
         }
       }
 
-      ~li {
+      ~ li {
         a {
           border-left: 2px solid #666;
         }

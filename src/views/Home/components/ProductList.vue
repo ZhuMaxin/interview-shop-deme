@@ -10,8 +10,8 @@ const dataProductList = ref([]);
 
 const total = ref(0);
 const pagination = ref({
-  pageNum: 1,
-  pageSize: 10,
+  page_num: 1,
+  page_size: 10,
 });
 
 function getProductList() {
@@ -58,8 +58,8 @@ watch(()=>commodityStore.searchValue, (newValue) => {
       </div>
       <div class="page-box">
         <el-pagination
-          v-model:current-page="pagination.pageNum"
-          v-model:page-size="pagination.pageSize"
+          v-model:current-page="pagination.page_num"
+          v-model:page-size="pagination.page_size"
           :page-sizes="[10, 20, 30, 50, 100]"
           background
           layout="total, sizes, prev, pager, next, jumper"

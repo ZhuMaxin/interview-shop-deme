@@ -5,7 +5,8 @@ import { useUserStore } from "@/stores/user";
 
 // 创建axios实例
 const axiosHttp = axios.create({
-  baseURL: "https://hrapi.ai17.cc/api/v1",
+  // baseURL: "https://hrapi.ai17.cc/api/v1",
+  baseURL: "/api/v1",
   timeout: 5000,
 });
 
@@ -16,9 +17,8 @@ axiosHttp.interceptors.request.use(
     const userStore = useUserStore();
     if (userStore.access_token) {
       // 直接读取 Store 中的响应式 token
-      // config.headers.Access_token = `${userStore.access_token}`;
-      // config.headers.Refresh_token = `${userStore.refresh_token}`;
-      // config.headers.Authorization  = `Bearer ${userStore.access_token}`;
+      config.headers.Access_token = `${userStore.access_token}`;
+      config.headers.Refresh_token = `${userStore.refresh_token}`;
     }
     return config;
   },

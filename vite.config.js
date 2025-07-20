@@ -34,4 +34,13 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    proxy: {
+      "^/api/v1": {
+        target: "https://hrapi.ai17.cc",
+        changeOrigin: true,
+        // rewrite:path=>path.replace(/^\/api/,'')
+      },
+    },
+  },
 });
